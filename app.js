@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         squares[appleIndex].classList.remove('apple');
         clearInterval(interval);
         score = 0;
-        // randomApple()
+        randomApple()
         direction = 1
         scoreDispaly.innerText = score
         intervalTime = 1000
@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             (currentSnake[0] - width < 0 && direction === -width) || // if snake hits th top
             squares[currentSnake[0] + direction].classList.contains('snake') // if snake goes into itself
         ) {
+            alert("You lose :(")
             return clearInterval(interval)
         }
 
@@ -52,13 +53,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //deals with snake getting apple
        if(squares[currentSnake[0]].classList.contains('apple')) {
-           
+
          squares[currentSnake[0]].classList.remove('apple')
          squares[tail].classList.add('snake')
          currentSnake.push(tail)
          randomApple()
          score++
-         scoreDisplay.textContent = score
+         scoreDispaly.textContent = score
          clearInterval(interval)
          intervalTime = intervalTime * speed
          interval = setInterval(moveOutcomes, intervalTime)
@@ -67,31 +68,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+    //generate new apple once apple is eaten
+    function randomApple() {
+        do{
+          appleIndex = Math.floor(Math.random() * squares.length)
+        } while(squares[appleIndex].classList.contains('snake')) //making sure apples dont appear on the snake
+        squares[appleIndex].classList.add('apple')
+      }
+
 
     // assign function to keycodes
     function control(e) {
+        // console.log(e.keyCode );
         // Remove the snake from the grid
         squares[currentIndex].classList.remove('snake')
 
-        if (e.keycode === 39) {
+        if (e.keyCode === 39) {
             // Press the right arrow on the keyboard
             direction = 1
 
         }
-        else if (e.keycode === 38) {
+        else if (e.keyCode === 38) {
             // Press up arrow, snake go back ten divs, appearing to go up
             direction = -width
         }
-        else if (e.keycode === 37) {
+        else if (e.keyCode === 37) {
             // Press left, the snake will go left one div
             direction = -1
         }
-        else if (e.keycode === 40) {
+        else if (e.keyCode === 40) {
             // Press down
             direction = +width
         }
     }
 
     document.addEventListener('keyup', control)
+    startBtn.addEventListener('click', startGame)
 
 });
